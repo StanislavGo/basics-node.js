@@ -1,8 +1,7 @@
-import { cpus } from "os";
+import { availableParallelism } from "os";
 import { Worker } from "worker_threads";
 
 const pathToWorkerFile = "./src/wt/worker.js";
-const numberOfCores = cpus().length;
 const start_number = 10;
 
 const workerService = (number) => new Promise(resolve => {
@@ -20,7 +19,7 @@ const workerService = (number) => new Promise(resolve => {
 });
 
 const performCalculations = async () => {
-    const workers = Array.from({ length: numberOfCores }, (_, i) => workerService(start_number + i));
+    const workers = Array.from({ length: availableParallelism() }, (_, i) => workerService(start_number + i));
     const result = await Promise.all(workers);
     console.log(result);
 };
